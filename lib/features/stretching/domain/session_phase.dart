@@ -1,0 +1,1 @@
+enum SessionPhase { exercise, rest, finished }
