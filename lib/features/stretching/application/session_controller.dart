@@ -186,6 +186,29 @@ class SessionController extends StateNotifier<SessionState> {
       remainingSeconds: state.exerciseSeconds,
     );
   }
+
+  void reorderExercises(int oldIndex, int newIndex) {
+    final updated = [...state.exercises];
+
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+
+    final item = updated.removeAt(oldIndex);
+    updated.insert(newIndex, item);
+
+    final total = _computeTotal(
+      updated,
+      state.exerciseSeconds,
+      state.restSeconds,
+    );
+
+    state = state.copyWith(
+      exercises: updated,
+      totalPlannedSeconds: total,
+    );
+  }
+
   void _tick() async {
     if (!state.isRunning) return;
     if (state.phase == SessionPhase.finished) return;

@@ -46,17 +46,27 @@ class ExercisesSettingsScreen extends ConsumerWidget {
 
           const Divider(height: 1),
 
-          // 🧘 Exercise list
           Expanded(
-            child: ListView.separated(
+            child: ReorderableListView.builder(
               itemCount: state.exercises.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
+              onReorder: (oldIndex, newIndex) {
+                ctrl.reorderExercises(oldIndex, newIndex);
+              },
+              buildDefaultDragHandles: true,
               itemBuilder: (context, index) {
                 final exercise = state.exercises[index];
 
-                return ExerciseListTile(
-                  exercise: exercise,
-                  onToggle: () => ctrl.toggleInclude(exercise.id),
+                return Container(
+                  key: ValueKey(exercise.id), // 🔥 REQUIRED for reorder
+                  child: Column(
+                    children: [
+                      ExerciseListTile(
+                        exercise: exercise,
+                        onToggle: () => ctrl.toggleInclude(exercise.id),
+                      ),
+                      const Divider(height: 1),
+                    ],
+                  ),
                 );
               },
             ),
